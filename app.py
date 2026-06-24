@@ -7,7 +7,12 @@ database.criar_banco()
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    conn = sqlite3.connect('agenda.db')
+    cursor = conn.cursor()
+    cursor.execute('SELECT * FROM contatos') 
+    contatos = cursor.fetchall()
+    conn.close()
+    return render_template('index.html', contatos=contatos)
 
 @app.route('/adicionar', methods=['POST'])
 def adicionar():

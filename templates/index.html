@@ -6,12 +6,17 @@
 <body>
     <h1>Agenda de Contatos</h1>
     <p>Bem vindo!</p>
-</body>
-</html>
 
-<form action="/adicionar" method="POST">
+    <form action="/adicionar" method="POST">
     <input type="text" name="nome" placeholder="Nome">
     <input type="text" name="telefone" placeholder="Telefone">
     <input type="text" name="email" placeholder="Email">
     <button type="submit">Salvar</button>
 </form>
+
+{% for contato in contatos %}
+    <p>{{ contato[1] }} - {{ contato[2] }} - {{ contato[3] }}</p>
+{% endfor %}
+
+</body>
+</html>
