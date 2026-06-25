@@ -29,6 +29,16 @@ def adicionar():
     
     return redirect('/')
 
+@app.route('/deletar/<int:id>', methods=['POST'])
+def deletar(id):
+    conn = sqlite3.connect('agenda.db')
+    cursor = conn.cursor()
+    cursor.execute('DELETE FROM contatos WHERE id = ?', (id,))
+    conn.commit()
+    conn.close()
+    return redirect('/')
+
 if __name__ == '__main__':
     app.run(debug=True)
+
 

@@ -16,6 +16,9 @@
 
 {% for contato in contatos %}
     <p>{{ contato[1] }} - {{ contato[2] }} - {{ contato[3] }}</p>
+    <form action="/deletar/{{ contato[0] }}" method="POST">
+        <button type="submit" onclick="return confirm('Tem certeza que deseja deletar?')">Deletar</button>
+    </form>
 {% endfor %}
 
 </body>
