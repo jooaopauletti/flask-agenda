@@ -1,8 +1,9 @@
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request, redirect, flash
 import database
 import sqlite3
 
 app = Flask(__name__)
+app.secret_key = 'flask_agenda_2026'
 database.criar_banco()
 
 @app.route('/')
@@ -16,16 +17,18 @@ def index():
 
 @app.route('/adicionar', methods=['POST'])
 def adicionar():
-    nome = request.form['nome']
-    telefone = request.form['telefone']
-    email = request.form['email']
-
+    nome = request.form['nome'].strip()
+    telefone = request.form['telefone'].strip()
+    email = request.form['email'].strip()
+    if not nome or not telefone or not email:
+        flash('Preencha todos os campos!')
+        return redirect('/')  
     conn = sqlite3.connect('agenda.db')
     cursor = conn.cursor()
     cursor.execute('INSERT INTO contatos (nome, telefone, email) VALUES (?, ?, ?)', (nome, telefone, email))
     conn.commit()
     conn.close()
-
+    flash('Contato adicionado com sucesso!')
     return redirect('/')
 
 @app.route('/deletar/<int:id>', methods=['POST'])
