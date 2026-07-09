@@ -40,7 +40,7 @@ def deletar(id):
     conn.close()
     return redirect('/')
 
-@app.route('/editar/<id>', methods= ['GET'])
+@app.route('/editar/<int:id>', methods= ['GET'])
 def editar(id):
     conn = sqlite3.connect('agenda.db')
     cursor = conn.cursor()
@@ -49,11 +49,14 @@ def editar(id):
     conn.close()
     return render_template('editar.html', contato=contato)
 
-@app.route('/atualizar/<id>', methods= ['POST'])
+@app.route('/atualizar/<int:id>', methods= ['POST'])
 def atualizar(id):
-    nome = request.form['nome']
-    telefone = request.form['telefone']
-    email = request.form['email']
+    nome = request.form['nome'].strip()
+    telefone = request.form['telefone'].strip()
+    email = request.form['email'].strip()
+    if not nome or not telefone or not email:
+        flash('Preencha todos os campos!')
+        return redirect('/editar/' + str(id))
     conn = sqlite3.connect('agenda.db')
     cursor = conn.cursor()
     cursor.execute('UPDATE contatos SET nome=?, telefone=?, email=? WHERE id=?', (nome, telefone, email, id))
