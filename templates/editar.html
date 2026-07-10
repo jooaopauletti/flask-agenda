@@ -8,6 +8,13 @@
 <body class="bg-light">
 <div class="container mt-5">
     <h1 class="mb-4">Editar Contato</h1>
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-info">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+    {% endwith %}
     <form action="/atualizar/{{ contato[0] }}" method="POST">
         <div class="mb-3">
             <input type="text" name="nome" value="{{ contato[1] }}" class="form-control" placeholder="Nome">
