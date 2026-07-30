@@ -1,2 +1,4 @@
 __pycache__/
 agenda.db
+venv/
+.env

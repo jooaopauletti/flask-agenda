@@ -1,9 +1,14 @@
-from flask import Flask, render_template, request, redirect, flash
+from dotenv import load_dotenv
+import os
 import database
 import sqlite3
+from flask import Flask, render_template, request, redirect, flash
+
+load_dotenv()
+SECRET_KEY = os.getenv('SECRET_KEY')
 
 app = Flask(__name__)
-app.secret_key = 'flask_agenda_2026'
+app.secret_key = SECRET_KEY
 database.criar_banco()
 
 @app.route('/')
