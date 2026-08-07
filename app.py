@@ -7,16 +7,17 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 load_dotenv()
 SECRET_KEY = os.getenv('SECRET_KEY')
+DB_NAME = 'agenda.db'
 
 app = Flask(__name__)
 app.secret_key = SECRET_KEY
-database.criar_banco()
+database.criar_banco(DB_NAME)
 
 @app.route('/')
 def index():
     if 'usuario_id' not in session:
         return redirect('/login')
-    conn = sqlite3.connect('agenda.db')
+    conn = sqlite3.connect(DB_NAME)
     cursor = conn.cursor()
     cursor.execute('SELECT * FROM contatos WHERE usuario_id = ?', (session['usuario_id'],))
     contatos = cursor.fetchall()
@@ -33,7 +34,7 @@ def adicionar():
     if not nome or not telefone or not email:
         flash('Preencha todos os campos!')
         return redirect('/')  
-    conn = sqlite3.connect('agenda.db')
+    conn = sqlite3.connect(DB_NAME)
     cursor = conn.cursor()
     cursor.execute('INSERT INTO contatos (nome, telefone, email, usuario_id) VALUES (?, ?, ?, ?)', (nome, telefone, email, session['usuario_id']))
     conn.commit()
@@ -45,7 +46,7 @@ def adicionar():
 def deletar(id):
     if 'usuario_id' not in session:
         return redirect('/login')
-    conn = sqlite3.connect('agenda.db')
+    conn = sqlite3.connect(DB_NAME)
     cursor = conn.cursor()
     cursor.execute('DELETE FROM contatos WHERE id = ? AND usuario_id = ?', (id, session['usuario_id']))
     conn.commit()
@@ -56,7 +57,7 @@ def deletar(id):
 def editar(id):
     if 'usuario_id' not in session:
         return redirect('/login')
-    conn = sqlite3.connect('agenda.db')
+    conn = sqlite3.connect(DB_NAME)
     cursor = conn.cursor()
     cursor.execute('SELECT * FROM contatos WHERE id = ? AND usuario_id = ?', (id, session['usuario_id']))
     contato = cursor.fetchone()
@@ -75,7 +76,7 @@ def atualizar(id):
     if not nome or not telefone or not email:
         flash('Preencha todos os campos!')
         return redirect('/editar/' + str(id))
-    conn = sqlite3.connect('agenda.db')
+    conn = sqlite3.connect(DB_NAME)
     cursor = conn.cursor()
     cursor.execute('UPDATE contatos SET nome=?, telefone=?, email=? WHERE id=? AND usuario_id=?', (nome, telefone, email, id, session['usuario_id']))
     conn.commit()
@@ -97,7 +98,7 @@ def cadastrar():
     
     senha_hash = generate_password_hash(senha)
     
-    conn = sqlite3.connect('agenda.db')
+    conn = sqlite3.connect(DB_NAME)
     cursor = conn.cursor()
     try:
         cursor.execute('INSERT INTO usuarios (login, senha) VALUES (?, ?)', (login, senha_hash))
@@ -120,7 +121,7 @@ def entrar():
     login = request.form['login'].strip()
     senha = request.form['senha'].strip()
     
-    conn = sqlite3.connect('agenda.db')
+    conn = sqlite3.connect(DB_NAME)
     cursor = conn.cursor()
     cursor.execute('SELECT * FROM usuarios WHERE login = ?', (login,))
     usuario = cursor.fetchone()

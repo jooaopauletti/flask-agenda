@@ -5,8 +5,8 @@ def coluna_existe(cursor, tabela, coluna):
     colunas = [linha[1] for linha in cursor.fetchall()]
     return coluna in colunas
 
-def criar_banco():
-    conn = sqlite3.connect('agenda.db')
+def criar_banco(db_name='agenda.db'):
+    conn = sqlite3.connect(db_name)
     cursor = conn.cursor()
     
     cursor.execute('''
